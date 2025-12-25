@@ -468,7 +468,7 @@ class MainWindow(QMainWindow):
             self.show_err("Insert", f"Required file(s) not selected: {', '.join(missing)}")
             return
 
-        if required_bases:
+        if chosen:
             resp = self.client.insert_with_files(self.current_table, values, chosen)
         else:
             resp = self.client.insert(self.current_table, values)

@@ -141,10 +141,13 @@ def encrypt_bytes(data: bytes, pub: PublicKey, mode: str = "rand_len") -> bytes:
 
         m = int.from_bytes(block, "big")
         c = rsa_encrypt_int(m, pub)
-        cbytes = c.to_bytes(k, "big")
+        # минимальное количество байт для хранения c
+        clen = max(1, (c.bit_length() + 7) // 8)
+        cbytes = c.to_bytes(clen, "big")
 
         if mode in ("raw_fixed", "rand_fixed"):
-            out += cbytes
+            # fixed требует k байт
+            out += c.to_bytes(k, "big")
         else:
             out += len(cbytes).to_bytes(2, "big") + cbytes
 
